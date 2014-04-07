@@ -39,7 +39,7 @@ import java.util.List;
 
 public class LegacyServer implements Server {
 
-    private static final String URL = "http://goo.im/json2&path=/devs/aospa_legacy/%s&ro_board=%s";
+    private static final String URL = "http://goo.im/json2&path=/devs/tilaksidduram/PA/%s&ro_board=%s";
     private static final String GAPPS_RESERVED_WORDS = "-signed|-modular|-full|-mini|-micro|-stock";
 
     private Context mContext;
