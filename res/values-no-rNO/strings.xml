@@ -28,7 +28,7 @@
   <string name="check_for_updates_long">Se etter oppdateringer</string>
   <string name="all_up_to_date">Du er oppdatert!</string>
   <string name="rom_scanning">Ser etter system oppdateringer...</string>
-  <string name="rom_gapps_new_version">Systemoppdatering tilgjengelig!</string>
+  <string name="rom_gapps_new_version">Systemoppdateringer tilgjengelig!</string>
   <string name="rom_new_version">Ny ROM oppdatering tilgjengelig!</string>
   <string name="gapps_new_version">Ny Google apps oppdatering tilgjengelig!</string>
   <string name="no_updates">Ingen systemoppdateringer tilgjengelig</string>
@@ -39,7 +39,7 @@
   <string name="system_recovery">Recovery versjon: %1$s</string>
   <string name="system_recovery_unknown">Ukjent</string>
   <string name="updates">Oppdateringer</string>
-  <string name="updates_checking">Søker...</string>
+  <string name="updates_checking">Sjekker...</string>
   <string name="updates_error">Feil</string>
   <string name="updates_found">Systemoppdatering tilgjengelig</string>
   <string name="updates_uptodate">Alt er oppdatert</string>
@@ -79,7 +79,7 @@
   <string name="alert_reboot_install_title">Installer oppdatering(er)</string>
   <string name="alert_reboot_one_message">Din enhet vil starte på nytt og installere oppdateringen.</string>
   <string name="alert_reboot_more_message">Din enhet vil starte på nytt og installere oppdateringene.</string>
-  <string name="alert_reboot_now">Installér nå</string>
+  <string name="alert_reboot_now">Installer nå</string>
   <string name="file_not_found">Kan ikke legge til fil</string>
   <string name="changelog">Endringslogg</string>
   <string name="google_plus">Google+</string>
@@ -111,10 +111,10 @@
   <string name="error_device_not_found_server">Det ble ikke funnet noen ROM for din enhet.</string>
   <string name="settings">Innstillinger</string>
   <string name="settings_checktime_title">Frekvens av sjekk etter oppdateringer</string>
-  <string name="settings_checktime_summary">Spesifisér tid mellom hver sjekk etter oppdatering</string>
+  <string name="settings_checktime_summary">Spesifiser tid mellom hver sjekk etter oppdatering</string>
   <string name="settings_checkgapps_title">Se etter Google apps</string>
   <string name="settings_checkgapps_summary">Se også etter PA-spesifikke Google apps</string>
-  <string name="settings_gappstype_title">Google apps-versjon</string>
+  <string name="settings_gappstype_title">Google apps type</string>
   <string name="settings_gappstype_summary">Velg mellom full, mini, mikro eller standard gapps-pakke</string>
   <string name="gapps_type_full">Full pakke</string>
   <string name="gapps_type_mini">Mini pakke</string>
