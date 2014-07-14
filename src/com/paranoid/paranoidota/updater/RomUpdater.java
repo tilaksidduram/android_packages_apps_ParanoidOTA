@@ -45,7 +45,7 @@ public class RomUpdater extends Updater {
 
     public RomUpdater(Context context, boolean fromAlarm) {
         super(context, new Server[] {
-                new PaServer(),  new HsbServer(), new GooServer(context, true)
+                new PaServer(),  new HsbServer(), new LegacyServer(context, true)
         }, fromAlarm);
     }
 
