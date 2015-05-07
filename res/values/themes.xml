@@ -24,6 +24,7 @@
         <!-- customize the color palette -->
         <item name="android:colorPrimary">@color/colorPrimary</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
 
         <item name="android:checkboxStyle">@style/Checkbox</item>
     </style>
