@@ -57,7 +57,6 @@ import com.paranoid.paranoidota.helpers.DownloadHelper;
 import com.paranoid.paranoidota.helpers.DownloadHelper.DownloadCallback;
 import com.paranoid.paranoidota.helpers.RebootHelper;
 import com.paranoid.paranoidota.helpers.RecoveryHelper;
-import com.paranoid.paranoidota.updater.GappsUpdater;
 import com.paranoid.paranoidota.updater.RomUpdater;
 import com.paranoid.paranoidota.updater.Updater;
 import com.paranoid.paranoidota.updater.Updater.PackageInfo;
@@ -92,7 +91,6 @@ public class MainActivity extends Activity implements UpdaterListener, DownloadC
     private InstallCard mInstallCard;
 
     private RomUpdater mRomUpdater;
-    private GappsUpdater mGappsUpdater;
     private NotificationInfo mNotificationInfo;
 
     private LinearLayout mCardsLayout;
@@ -197,8 +195,6 @@ public class MainActivity extends Activity implements UpdaterListener, DownloadC
 
         mRomUpdater = new RomUpdater(this, false);
         mRomUpdater.addUpdaterListener(this);
-        mGappsUpdater = new GappsUpdater(this, false);
-        mGappsUpdater.addUpdaterListener(this);
 
         DownloadHelper.init(this, this);
 
@@ -216,7 +212,6 @@ public class MainActivity extends Activity implements UpdaterListener, DownloadC
                     checkUpdates();
                 } else {
                     mRomUpdater.setLastUpdates(mNotificationInfo.mPackageInfosRom);
-                    mGappsUpdater.setLastUpdates(mNotificationInfo.mPackageInfosGapps);
                 }
             } else {
                 checkUpdates();
@@ -277,7 +272,6 @@ public class MainActivity extends Activity implements UpdaterListener, DownloadC
 
     public void checkUpdates() {
         mRomUpdater.check();
-        mGappsUpdater.check();
     }
 
     @Override
@@ -372,12 +366,10 @@ public class MainActivity extends Activity implements UpdaterListener, DownloadC
         switch (state) {
             case STATE_UPDATES:
                 if (mSystemCard == null) {
-                    mSystemCard = new SystemCard(mContext, null, mRomUpdater, mGappsUpdater,
-                            mSavedInstanceState);
+                    mSystemCard = new SystemCard(mContext, null, mRomUpdater, mSavedInstanceState);
                 }
                 if (mUpdatesCard == null) {
-                    mUpdatesCard = new UpdatesCard(mContext, null, mRomUpdater, mGappsUpdater,
-                            mSavedInstanceState);
+                    mUpdatesCard = new UpdatesCard(mContext, null, mRomUpdater, mSavedInstanceState);
                 }
                 addCards(new Card[] {
                         mSystemCard, mUpdatesCard
@@ -475,3 +467,4 @@ public class MainActivity extends Activity implements UpdaterListener, DownloadC
         }
     }
 }
+

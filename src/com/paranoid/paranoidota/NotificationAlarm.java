@@ -23,13 +23,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.paranoid.paranoidota.updater.GappsUpdater;
 import com.paranoid.paranoidota.updater.RomUpdater;
 
 public class NotificationAlarm extends BroadcastReceiver {
 
     private RomUpdater mRomUpdater;
-    private GappsUpdater mGappsUpdater;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -37,12 +35,8 @@ public class NotificationAlarm extends BroadcastReceiver {
         if (mRomUpdater == null) {
             mRomUpdater = new RomUpdater(context, true);
         }
-        if (mGappsUpdater == null) {
-            mGappsUpdater = new GappsUpdater(context, true);
-        }
         if (Utils.isNetworkAvailable(context)) {
             mRomUpdater.check();
-            mGappsUpdater.check();
         }
     }
 }

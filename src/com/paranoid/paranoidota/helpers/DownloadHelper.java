@@ -49,7 +49,6 @@ public class DownloadHelper {
     private static DownloadCallback sCallback;
 
     private static boolean sDownloadingRom = false;
-    private static boolean sDownloadingGapps = false;
 
     public static interface DownloadCallback {
 
@@ -65,12 +64,11 @@ public class DownloadHelper {
     private static Runnable sUpdateProgress = new Runnable() {
 
         public void run() {
-            if (!sDownloadingRom && !sDownloadingGapps) {
+            if (!sDownloadingRom) {
                 return;
             }
 
             long idRom = sSettingsHelper.getDownloadRomId();
-            long idGapps = sSettingsHelper.getDownloadGappsId();
 
             long[] statusRom = sDownloadingRom ? getDownloadProgress(idRom, true) : new long[] {
                     DownloadManager.STATUS_SUCCESSFUL,
@@ -78,17 +76,11 @@ public class DownloadHelper {
                     0,
                     -1
             };
-            long[] statusGapps = sDownloadingGapps ? getDownloadProgress(idGapps, false)
-                    : new long[] {
-                            DownloadManager.STATUS_SUCCESSFUL, 0, 0, -1
-                    };
 
             int status = DownloadManager.STATUS_SUCCESSFUL;
-            if (statusRom[0] == DownloadManager.STATUS_FAILED
-                    && statusGapps[0] == DownloadManager.STATUS_FAILED) {
+            if (statusRom[0] == DownloadManager.STATUS_FAILED) {
                 status = DownloadManager.STATUS_FAILED;
-            } else if (statusRom[0] == DownloadManager.STATUS_PENDING
-                    && statusGapps[0] == DownloadManager.STATUS_PENDING) {
+            } else if (statusRom[0] == DownloadManager.STATUS_PENDING) {
                 status = DownloadManager.STATUS_PENDING;
             }
 
@@ -98,15 +90,12 @@ public class DownloadHelper {
                     break;
                 case DownloadManager.STATUS_FAILED:
                     int error = (int) statusRom[3];
-                    if (error == -1) {
-                        error = (int) statusGapps[3];
-                    }
                     sCallback.onDownloadError(error == -1 ? null : sContext.getResources()
                             .getString(error));
                     break;
                 default:
-                    long totalBytes = statusRom[1] + statusGapps[1];
-                    long downloadedBytes = statusRom[2] + statusGapps[2];
+                    long totalBytes = statusRom[1];
+                    long downloadedBytes = statusRom[2];
                     long percent = totalBytes == -1 && downloadedBytes == -1 ? -1 : downloadedBytes
                             * 100 / totalBytes;
                     if (totalBytes != -1 && downloadedBytes != -1 && percent != -1) {
@@ -157,18 +146,15 @@ public class DownloadHelper {
     public static void clearDownloads() {
         long id = sSettingsHelper.getDownloadRomId();
         checkDownloadFinished(id, true, false);
-        id = sSettingsHelper.getDownloadGappsId();
-        checkDownloadFinished(id, false, false);
     }
 
     private static void checkDownloadFinished(long downloadId, boolean isRom,
             boolean installIfFinished) {
-        long id = isRom ? sSettingsHelper.getDownloadRomId() : sSettingsHelper.getDownloadGappsId();
+        long id = sSettingsHelper.getDownloadRomId();
         if (id == -1L || (downloadId != 0 && downloadId != id)) {
             return;
         }
-        String md5 = isRom ? sSettingsHelper.getDownloadRomMd5() : sSettingsHelper
-                .getDownloadGappsMd5();
+        String md5 = sSettingsHelper.getDownloadRomMd5();
         DownloadManager.Query query = new DownloadManager.Query();
         query.setFilterById(id);
         Cursor cursor = sDownloadManager.query(query);
@@ -202,16 +188,12 @@ public class DownloadHelper {
     }
 
     public static boolean isDownloading(boolean rom) {
-        return rom ? sDownloadingRom : sDownloadingGapps;
+        return sDownloadingRom;
     }
 
     public static boolean isDownloading(boolean rom, String fileName) {
         if (sDownloadingRom) {
             String downloadName = sSettingsHelper.getDownloadRomName();
-            return fileName.equals(downloadName);
-        }
-        if (sDownloadingGapps) {
-            String downloadName = sSettingsHelper.getDownloadGappsName();
             return fileName.equals(downloadName);
         }
         return false;
@@ -222,57 +204,6 @@ public class DownloadHelper {
 
         sUpdateHandler.post(sUpdateProgress);
         sCallback.onDownloadStarted();
-
-        if (url.contains("goo.im")) {
-
-            if (sSettingsHelper.isLogged()) {
-
-                String login = sSettingsHelper.getLogin();
-                String lurl = url + "&hash=" + login;
-                realDownloadFile(lurl, fileName, md5, isRom);
-
-            } else {
-
-                new AsyncTask<Void, Void, Void>() {
-
-                    @Override
-                    protected Void doInBackground(Void... params) {
-
-                        InputStream is = null;
-                        try {
-                            URL getUrl = new URL(url);
-                            URLConnection conn = getUrl.openConnection();
-                            conn.connect();
-                            is = new BufferedInputStream(conn.getInputStream());
-                            byte[] buf = new byte[4096];
-                            while (is.read(buf) != -1) {
-                            }
-                            try {
-                                Thread.sleep(10500);
-                            } catch (InterruptedException e) {
-                            }
-                            realDownloadFile(url, fileName, md5, isRom);
-                            readdCallback();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            if (is != null) {
-                                try {
-                                    is.close();
-                                } catch (Exception e) {
-                                }
-                            }
-                        }
-                        return null;
-                    }
-
-                }.execute((Void) null);
-            }
-
-        } else {
-            realDownloadFile(url, fileName, md5, isRom);
-        }
-
     }
 
     private static void realDownloadFile(String url, String fileName, String md5, boolean isRom) {
@@ -293,9 +224,6 @@ public class DownloadHelper {
         if (isRom) {
             sDownloadingRom = true;
             sSettingsHelper.setDownloadRomId(id, md5, fileName);
-        } else {
-            sDownloadingGapps = true;
-            sSettingsHelper.setDownloadGappsId(id, md5, fileName);
         }
     }
 
@@ -303,9 +231,6 @@ public class DownloadHelper {
         if (isRom) {
             sDownloadingRom = false;
             sSettingsHelper.setDownloadRomId(null, null, null);
-        } else {
-            sDownloadingGapps = false;
-            sSettingsHelper.setDownloadGappsId(null, null, null);
         }
         if (removeDownload) {
             sDownloadManager.remove(id);
@@ -318,9 +243,6 @@ public class DownloadHelper {
         if (isRom) {
             sDownloadingRom = false;
             sSettingsHelper.setDownloadRomId(null, null, null);
-        } else {
-            sDownloadingGapps = false;
-            sSettingsHelper.setDownloadGappsId(null, null, null);
         }
         sUpdateHandler.removeCallbacks(sUpdateProgress);
     }
@@ -329,8 +251,7 @@ public class DownloadHelper {
         new AlertDialog.Builder(sContext)
                 .setTitle(R.string.cancel_download_alert_title)
                 .setMessage(
-                        isRom ? R.string.cancel_rom_download_alert_summary
-                                : R.string.cancel_gapps_download_alert_summary)
+                        R.string.cancel_rom_download_alert_summary)
                 .setPositiveButton(R.string.cancel_download_alert_yes,
                         new DialogInterface.OnClickListener() {
 
@@ -376,8 +297,6 @@ public class DownloadHelper {
             case DownloadManager.STATUS_FAILED:
                 if (isRom) {
                     sDownloadingRom = false;
-                } else {
-                    sDownloadingGapps = false;
                 }
                 error = getDownloadError(cursor);
                 break;
@@ -404,18 +323,6 @@ public class DownloadHelper {
         }
         if (romId >= 0L && !sDownloadingRom) {
             removeDownload(romId, true, false);
-        }
-
-        long gappsId = sSettingsHelper.getDownloadGappsId();
-        query = new DownloadManager.Query();
-        query.setFilterById(gappsId);
-        cursor = sDownloadManager.query(query);
-        sDownloadingGapps = cursor.moveToFirst();
-        if (cursor != null) {
-            cursor.close();
-        }
-        if (gappsId >= 0L && !sDownloadingGapps) {
-            removeDownload(romId, false, false);
         }
     }
 

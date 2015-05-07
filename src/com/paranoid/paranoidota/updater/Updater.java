@@ -143,7 +143,7 @@ public abstract class Updater implements Response.Listener<JSONObject>, Response
         }
         if (mFromAlarm) {
             if (!force && (mSettingsHelper.getCheckTime() < 0
-                    || (!isRom() && !mSettingsHelper.getCheckGapps()))) {
+                    || (!isRom()))) {
                 return;
             }
         }
@@ -170,27 +170,7 @@ public abstract class Updater implements Response.Listener<JSONObject>, Response
             setLastUpdates(null);
             List<PackageInfo> list = mServer.createPackageInfoList(response);
             String error = mServer.getError();
-            if (!isRom()) {
-                int gappsType = mSettingsHelper.getGappsType();
-                PackageInfo info = null;
-                for (int i = 0; i < list.size(); i++) {
-                    info = list.get(i);
-                    String fileName = info.getFilename();
-                    if ((gappsType == SettingsHelper.GAPPS_MINI && !fileName.contains("-mini"))
-                            ||
-                            (gappsType == SettingsHelper.GAPPS_STOCK && !fileName
-                                    .contains("-stock"))
-                            ||
-                            (gappsType == SettingsHelper.GAPPS_FULL && !fileName.contains("-full"))
-                            ||
-                            (gappsType == SettingsHelper.GAPPS_MICRO && !fileName
-                                    .contains("-micro"))) {
-                        list.remove(i);
-                        i--;
-                        continue;
-                    }
-                }
-            }
+
             lastUpdates = list.toArray(new PackageInfo[list.size()]);
             if (lastUpdates.length > 0) {
                 mServerWorks = true;

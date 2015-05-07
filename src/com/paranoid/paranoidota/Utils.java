@@ -308,7 +308,7 @@ public class Utils {
         try {
             Double.parseDouble(str);
             return true;
-        } catch (NumberFormatException ex) {
+        } catch (NumberFormatException ignored) {
         }
         return false;
     }

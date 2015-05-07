@@ -19,6 +19,7 @@
 
 package com.paranoid.paranoidota.cards;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -35,7 +36,6 @@ import android.widget.TextView;
 import com.paranoid.paranoidota.MainActivity;
 import com.paranoid.paranoidota.R;
 import com.paranoid.paranoidota.Utils;
-import com.paranoid.paranoidota.updater.GappsUpdater;
 import com.paranoid.paranoidota.updater.RomUpdater;
 import com.paranoid.paranoidota.updater.Updater.PackageInfo;
 import com.paranoid.paranoidota.updater.Updater.UpdaterListener;
@@ -50,10 +50,8 @@ import java.util.List;
 public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChangeListener {
 
     private static final String ROMS = "ROMS";
-    private static final String GAPPS = "GAPPS";
 
     private RomUpdater mRomUpdater;
-    private GappsUpdater mGappsUpdater;
     private LinearLayout mLayout;
     private TextView mInfo;
     private TextView mError;
@@ -63,24 +61,19 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
     private Item mDownload;
     private ProgressBar mWaitProgressBar;
     private String mErrorRom;
-    private String mErrorGapps;
     private int mNumChecked = 0;
 
     public UpdatesCard(Context context, AttributeSet attrs, RomUpdater romUpdater,
-            GappsUpdater gappsUpdater, Bundle savedInstanceState) {
+                       Bundle savedInstanceState) {
         super(context, attrs, savedInstanceState);
 
         mRomUpdater = romUpdater;
         mRomUpdater.addUpdaterListener(this);
-        mGappsUpdater = gappsUpdater;
-        mGappsUpdater.addUpdaterListener(this);
 
         if (savedInstanceState != null) {
             List<PackageInfo> mRoms = (List) savedInstanceState.getSerializable(ROMS);
-            List<PackageInfo> mGapps = (List) savedInstanceState.getSerializable(GAPPS);
 
             mRomUpdater.setLastUpdates(mRoms.toArray(new PackageInfo[mRoms.size()]));
-            mGappsUpdater.setLastUpdates(mGapps.toArray(new PackageInfo[mGapps.size()]));
         }
 
         setLayoutId(R.layout.card_updates);
@@ -117,7 +110,6 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
         });
 
         mErrorRom = null;
-        mErrorGapps = null;
 
         if (isExpanded()) {
             mAdditional.setVisibility(View.VISIBLE);
@@ -128,10 +120,6 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
 
     @Override
     public void expand() {
-        if ((mRomUpdater != null && mRomUpdater.isScanning())
-                || (mGappsUpdater != null && mGappsUpdater.isScanning())) {
-            return;
-        }
         super.expand();
         if (mAdditional != null) {
             mAdditional.setVisibility(View.VISIBLE);
@@ -148,13 +136,10 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
     public void saveState(Bundle outState) {
         super.saveState(outState);
         ArrayList<PackageInfo> mRoms = new ArrayList<PackageInfo>();
-        ArrayList<PackageInfo> mGapps = new ArrayList<PackageInfo>();
 
         mRoms.addAll(Arrays.asList(mRomUpdater.getLastUpdates()));
-        mGapps.addAll(Arrays.asList(mGappsUpdater.getLastUpdates()));
 
         outState.putSerializable(ROMS, mRoms);
-        outState.putSerializable(GAPPS, mGapps);
     }
 
     private void updateText() {
@@ -163,7 +148,7 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
 
         mNumChecked = 0;
         mDownload.setEnabled(false);
-        mCheck.setEnabled(!mRomUpdater.isScanning() && !mGappsUpdater.isScanning());
+        mCheck.setEnabled(!mRomUpdater.isScanning());
 
         for (int i = mAdditional.getChildCount() - 1; i >= 0; i--) {
             if (mAdditional.getChildAt(i) instanceof TextView) {
@@ -174,7 +159,7 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
         Context context = getContext();
         Resources res = context.getResources();
 
-        if (mRomUpdater.isScanning() || mGappsUpdater.isScanning()) {
+        if (mRomUpdater.isScanning()) {
             if (!mLayout.equals(mWaitProgressBar.getParent())) {
                 mLayout.addView(mWaitProgressBar);
             }
@@ -183,8 +168,7 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
         } else {
             mLayout.addView(mInfo);
             PackageInfo[] roms = mRomUpdater.getLastUpdates();
-            PackageInfo[] gapps = mGappsUpdater.getLastUpdates();
-            if ((roms == null || roms.length == 0) && (gapps == null || gapps.length == 0)) {
+            if ((roms == null || roms.length == 0)) {
                 setTitle(R.string.updates_uptodate);
                 mInfo.setText(R.string.no_updates_found);
                 mAdditional.addView(mAdditionalText);
@@ -192,18 +176,10 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
                 setTitle(R.string.updates_found);
                 mInfo.setText(res.getString(R.string.system_update));
                 addPackages(roms);
-                addPackages(gapps);
             }
             Utils.setRobotoThin(context, mLayout);
         }
         String error = mErrorRom;
-        if (mErrorGapps != null) {
-            if (error != null) {
-                error += "\n" + mErrorGapps;
-            } else {
-                error = mErrorGapps;
-            }
-        }
         if (error != null) {
             mError.setText(error);
             mLayout.addView(mError);
@@ -212,11 +188,7 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
 
     @Override
     public void startChecking(boolean isRom) {
-        if (isRom) {
             mErrorRom = null;
-        } else {
-            mErrorGapps = null;
-        }
         collapse();
         updateText();
     }
@@ -228,11 +200,7 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
 
     @Override
     public void checkError(String cause, boolean isRom) {
-        if (isRom) {
             mErrorRom = cause;
-        } else {
-            mErrorGapps = cause;
-        }
         updateText();
     }
 
@@ -253,16 +221,11 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
 
     private void unckeckCheckBoxes(PackageInfo master) {
         String masterFileName = master.getFilename();
-        boolean masterIsGapps = master.isGapps();
         for (int i = 0; i < mLayout.getChildCount(); i++) {
             View view = mLayout.getChildAt(i);
             if (view instanceof CheckBox) {
                 PackageInfo info = (PackageInfo) view.getTag(R.id.title);
                 String fileName = info.getFilename();
-                boolean isGapps = info.isGapps();
-                if (masterIsGapps == isGapps && !masterFileName.equals(fileName)) {
-                    ((CheckBox) view).setChecked(false);
-                }
             }
         }
     }
@@ -281,6 +244,7 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
         return list.toArray(new PackageInfo[list.size()]);
     }
 
+    @SuppressLint("ResourceAsColor")
     private void addPackages(PackageInfo[] packages) {
         Context context = getContext();
         Resources res = context.getResources();
@@ -319,3 +283,4 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
     }
 
 }
+

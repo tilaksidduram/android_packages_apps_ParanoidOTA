@@ -291,7 +291,7 @@ public class IOUtils {
         } finally {
             try {
                 is.close();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
