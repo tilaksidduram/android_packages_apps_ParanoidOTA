@@ -100,7 +100,7 @@ public class DownloadCard extends Card implements DownloadCallback {
 
         String names = "";
         for (int i = 0; infos != null && i < infos.length; i++) {
-            boolean isRom = !infos[i].isGapps();
+            boolean isRom = true;
             names += infos[i].getFilename() + "\n";
             if (DownloadHelper.isDownloading(isRom)) {
                 int resId = isRom ? R.string.already_downloading_rom
@@ -119,7 +119,7 @@ public class DownloadCard extends Card implements DownloadCallback {
             DownloadHelper.registerCallback(mActivity);
             DownloadHelper.downloadFile(infos[i].getPath(),
                     infos[i].getFilename(), infos[i].getMd5(),
-                    !infos[i].isGapps());
+                    true);
         }
     }
 

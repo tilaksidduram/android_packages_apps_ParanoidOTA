@@ -120,6 +120,9 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
 
     @Override
     public void expand() {
+        if ((mRomUpdater != null && mRomUpdater.isScanning())) {
+            return;
+        }
         super.expand();
         if (mAdditional != null) {
             mAdditional.setVisibility(View.VISIBLE);
@@ -188,7 +191,7 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
 
     @Override
     public void startChecking(boolean isRom) {
-            mErrorRom = null;
+        mErrorRom = null;
         collapse();
         updateText();
     }
@@ -200,7 +203,7 @@ public class UpdatesCard extends Card implements UpdaterListener, OnCheckedChang
 
     @Override
     public void checkError(String cause, boolean isRom) {
-            mErrorRom = cause;
+        mErrorRom = cause;
         updateText();
     }
 

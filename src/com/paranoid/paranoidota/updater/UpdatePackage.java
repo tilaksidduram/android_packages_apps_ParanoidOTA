@@ -107,9 +107,4 @@ public class UpdatePackage implements PackageInfo, Serializable {
     public String getSize() {
         return mSize;
     }
-
-    @Override
-    public boolean isGapps() {
-        return mIsGapps;
-    }
 }

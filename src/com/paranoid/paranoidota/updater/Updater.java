@@ -62,8 +62,6 @@ public abstract class Updater implements Response.Listener<JSONObject>, Response
         public String getDeltaPath();
 
         public String getDeltaMd5();
-
-        public boolean isGapps();
     }
 
     public static final String PROPERTY_DEVICE = "ro.pa.device";
@@ -142,8 +140,7 @@ public abstract class Updater implements Response.Listener<JSONObject>, Response
             mSettingsHelper = new SettingsHelper(getContext());
         }
         if (mFromAlarm) {
-            if (!force && (mSettingsHelper.getCheckTime() < 0
-                    || (!isRom()))) {
+            if (!force && (mSettingsHelper.getCheckTime() < 0)) {
                 return;
             }
         }

@@ -140,7 +140,6 @@ public class DownloadHelper {
         }
         sSettingsHelper = new SettingsHelper(sContext);
         checkDownloadFinished(downloadId, true, true);
-        checkDownloadFinished(downloadId, false, true);
     }
 
     public static void clearDownloads() {
@@ -204,6 +203,7 @@ public class DownloadHelper {
 
         sUpdateHandler.post(sUpdateProgress);
         sCallback.onDownloadStarted();
+        realDownloadFile(url, fileName, md5, isRom);
     }
 
     private static void realDownloadFile(String url, String fileName, String md5, boolean isRom) {
