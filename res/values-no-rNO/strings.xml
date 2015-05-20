@@ -36,7 +36,7 @@
   <string name="system_title">System info</string>
   <string name="system_rom">ROM versjon: %1$s</string>
   <string name="system_gapps">Google apps versjon: %1$s%2$s</string>
-  <string name="system_recovery">Recovery versjon: %1$s</string>
+  <string name="system_recovery">Gjenopprettingsversjon: %1$s</string>
   <string name="system_recovery_unknown">Ukjent</string>
   <string name="updates">Oppdateringer</string>
   <string name="updates_checking">Sjekker...</string>
@@ -61,7 +61,7 @@
   <string name="select_actions">Velg handlingene du vil utføre</string>
   <string name="backup">Sikkerhetskopier</string>
   <string name="wipe_data">Tøm Data</string>
-  <string name="wipe_caches">Tøm hurtigbufferen &amp; Dalvik</string>
+  <string name="wipe_caches">Tøm hurtigbufferen og Dalvik</string>
   <string name="remove_file_title">Fjern fil</string>
   <string name="remove_file_summary">Vil du fjerne filen fra listen?\n\n%1$s</string>
   <string name="file_manager_error">Ingen applikasjoner funnet for å velge zip-filen. Vennligst installer en filbehandler.</string>
@@ -98,7 +98,7 @@
   <string name="cancel_download">Avbryt nedlasting(er)</string>
   <string name="downloading_info">Oppdatering(er) som lastes ned:\n%1$s</string>
   <string name="error_cannot_resume">Feil: Nedlastingen kunne ikke gjenopptas</string>
-  <string name="error_device_not_found">Feil: SD-kort ikke tilkoblet</string>
+  <string name="error_device_not_found">Feil: Minnekort ikke tilkoblet</string>
   <string name="error_file_already_exists">Feil: Filen finnes allerede</string>
   <string name="error_file_error">Feil: Lagringsfeil</string>
   <string name="error_http_data_error">Feil: HTTP-feil</string>

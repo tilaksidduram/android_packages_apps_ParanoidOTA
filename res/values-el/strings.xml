@@ -73,9 +73,9 @@
   <string name="alert_backup_message">Καθορίστε το όνομα του αντιγράφου ασφαλείας (μη επιτρεπόμενοι χαρακτήρες θα απομακρυνθούν).\n\nΟι παρακάτω επιλογές θα λειτουργήσουνε μόνο σε TWRP.</string>
   <string name="system">Σύστημα</string>
   <string name="data">Δεδομένα</string>
-  <string name="cache">Cache</string>
+  <string name="cache">Μνήμη cache</string>
   <string name="recovery">Recovery</string>
-  <string name="boot">Boot</string>
+  <string name="boot">Εκκίνηση</string>
   <string name="androidsecure">Android secure</string>
   <string name="sdext">SD-Ext</string>
   <string name="alert_reboot_install_title">Εγκαταστήσετε ενημερώσεις</string>
