@@ -73,7 +73,7 @@
   <string name="data">應用程式資料</string>
   <string name="cache">快取</string>
   <string name="recovery">修復模式</string>
-  <string name="boot">Boot</string>
+  <string name="boot">啟動</string>
   <string name="androidsecure">Android 系統安全</string>
   <string name="sdext">記憶卡</string>
   <string name="alert_reboot_install_title">安裝更新</string>
