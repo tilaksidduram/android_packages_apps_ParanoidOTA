@@ -34,7 +34,7 @@ import com.paranoid.paranoidota.updater.Updater.PackageInfo;
 
 public class PaServer implements Server {
 
-    private static final String URL = "http://api.aospal.com/updates/%s";
+    private static final String URL = "http://downloads.codefi.re/houstonn/tilak/n7100/%s";
 
     private String mDevice = null;
     private String mError = null;
